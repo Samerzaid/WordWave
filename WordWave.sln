@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordWave.API", "WordWave.API\WordWave.API.csproj", "{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
