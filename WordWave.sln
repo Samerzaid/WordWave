@@ -3,7 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordWave.API", "WordWave.API\WordWave.API.csproj", "{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WordWave.API", "WordWave.API\WordWave.API.csproj", "{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordWave.Application", "WordWave.Application\WordWave.Application.csproj", "{5313E01F-9F7B-4C0E-B523-0D265C9C6F07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordWave.Domain", "WordWave.Domain\WordWave.Domain.csproj", "{11462C65-045C-45B0-A83B-95A4FE432ADF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordWave.Infrastructure", "WordWave.Infrastructure\WordWave.Infrastructure.csproj", "{AC864CC6-0CC9-4EAF-9E78-5AC5953199DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordWave.Presentation", "WordWave.Presentation\WordWave.Presentation.csproj", "{278E1306-6564-425E-ABA7-A0203A6BFCC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordWave.Presentation.UI", "WordWave.Presentation.UI\WordWave.Presentation.UI.csproj", "{D00F3190-77FE-4179-8954-F0774B455F0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{28A2F056-CA47-47E4-B0D8-416F49A478EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{58D9CAEF-4D70-49CF-B611-7C78E5141A68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +29,37 @@ Global
 		{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B60EE660-B78F-4F04-B6FC-F28A7C0C1454}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5313E01F-9F7B-4C0E-B523-0D265C9C6F07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5313E01F-9F7B-4C0E-B523-0D265C9C6F07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5313E01F-9F7B-4C0E-B523-0D265C9C6F07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5313E01F-9F7B-4C0E-B523-0D265C9C6F07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11462C65-045C-45B0-A83B-95A4FE432ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11462C65-045C-45B0-A83B-95A4FE432ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11462C65-045C-45B0-A83B-95A4FE432ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11462C65-045C-45B0-A83B-95A4FE432ADF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC864CC6-0CC9-4EAF-9E78-5AC5953199DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC864CC6-0CC9-4EAF-9E78-5AC5953199DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC864CC6-0CC9-4EAF-9E78-5AC5953199DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC864CC6-0CC9-4EAF-9E78-5AC5953199DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{278E1306-6564-425E-ABA7-A0203A6BFCC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{278E1306-6564-425E-ABA7-A0203A6BFCC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{278E1306-6564-425E-ABA7-A0203A6BFCC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{278E1306-6564-425E-ABA7-A0203A6BFCC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D00F3190-77FE-4179-8954-F0774B455F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D00F3190-77FE-4179-8954-F0774B455F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D00F3190-77FE-4179-8954-F0774B455F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D00F3190-77FE-4179-8954-F0774B455F0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B60EE660-B78F-4F04-B6FC-F28A7C0C1454} = {28A2F056-CA47-47E4-B0D8-416F49A478EC}
+		{5313E01F-9F7B-4C0E-B523-0D265C9C6F07} = {28A2F056-CA47-47E4-B0D8-416F49A478EC}
+		{11462C65-045C-45B0-A83B-95A4FE432ADF} = {28A2F056-CA47-47E4-B0D8-416F49A478EC}
+		{AC864CC6-0CC9-4EAF-9E78-5AC5953199DB} = {28A2F056-CA47-47E4-B0D8-416F49A478EC}
+		{278E1306-6564-425E-ABA7-A0203A6BFCC2} = {58D9CAEF-4D70-49CF-B611-7C78E5141A68}
+		{D00F3190-77FE-4179-8954-F0774B455F0D} = {58D9CAEF-4D70-49CF-B611-7C78E5141A68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0B4409CF-8993-4B4B-8604-4C69106672AC}
