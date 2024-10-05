@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using System.Text.Json;
+using WordWave.Presentation.Data;
 using WordWave.Presentation.UI.Components.Account.Pages;
 using WordWave.Presentation.UI.Components.Account.Pages.Manage;
-using WordWave.Presentation.UI.Data;
 
-namespace Microsoft.AspNetCore.Routing
+namespace WordWave.Presentation.UI.Components.Account
 {
     internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {

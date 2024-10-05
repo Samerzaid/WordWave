@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WordWave.Presentation.UI.Data;
+using WordWave.Presentation.Data;
 
 namespace WordWave.Presentation
 {

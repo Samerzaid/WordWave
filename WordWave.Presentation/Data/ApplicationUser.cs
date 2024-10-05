@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace WordWave.Presentation.UI.Data
+namespace WordWave.Presentation.Data
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser

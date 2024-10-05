@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
-using WordWave.Presentation.UI.Data;
+using WordWave.Presentation.Data;
 
 namespace WordWave.Presentation.UI.Components.Account
 {

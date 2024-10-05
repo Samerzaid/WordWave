@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using WordWave.Presentation.UI.Data;
+using WordWave.Presentation.Data;
 
 namespace WordWave.Presentation.UI.Components.Account
 {

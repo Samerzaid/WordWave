@@ -1,0 +1,8 @@
+﻿@font-face {
+    font-family: 'Arkitech';
+    src: url('../fonts/Arkitech/Arkitech Medium.ttf') format('truetype');
+}
+
+.navbar-header {
+    font-family: 'Arkitech';
+}

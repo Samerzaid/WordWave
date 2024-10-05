@@ -1,6 +1,19 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<div class="page bg-black @* bg-gradient *@">
+    <main>
+        <div>
+            <NavMenu />
+        </div>
+
+        <article class="content">
+            @Body
+        </article>
+        <div>
+            <Footer />
+        </div>
+    </main>
+</div>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

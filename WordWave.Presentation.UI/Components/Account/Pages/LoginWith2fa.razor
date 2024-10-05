@@ -1,8 +1,12 @@
 ﻿@page "/Account/LoginWith2fa"
 
 @using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
-@using WordWave.Presentation.UI.Data
+@using Microsoft.AspNetCore.WebUtilities
+@using WordWave.Presentation.Data
+@using WordWave.Presentation.UI
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager

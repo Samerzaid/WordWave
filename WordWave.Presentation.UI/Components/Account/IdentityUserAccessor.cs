@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using WordWave.Presentation.UI.Data;
+using WordWave.Presentation.Data;
 
 namespace WordWave.Presentation.UI.Components.Account
 {

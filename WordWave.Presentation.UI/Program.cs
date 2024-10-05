@@ -5,7 +5,8 @@ using WordWave.Presentation.Interfaces;
 using WordWave.Presentation.Services;
 using WordWave.Presentation.UI.Components;
 using WordWave.Presentation.UI.Components.Account;
-using WordWave.Presentation.UI.Data;
+using WordWave.Presentation.UI;
+using WordWave.Presentation.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+
 builder.Services.AddHttpClient("WordWaveApi", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5165");
+    client.BaseAddress = new Uri("http://localhost:5213");
 });
 
 builder.Services.AddSingleton<IUserService, UserService>();
@@ -29,16 +31,21 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-// Identity configuration
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+})
+    .AddIdentityCookies();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = true;
-})
+builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager()
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
@@ -53,23 +60,19 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-// Add Antiforgery after UseRouting and before UseEndpoints
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+// Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
 app.Run();
