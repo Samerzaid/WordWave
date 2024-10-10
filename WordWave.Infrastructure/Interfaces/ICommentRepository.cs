@@ -10,7 +10,7 @@ namespace WordWave.Infrastructure.Interfaces
 {
     public interface ICommentRepository : IRepository<Comment, int>
     {
-
+        Task<IEnumerable<BlogPost>> GetBlogPostsByCommentIdAsync(int commentId);
     }
 }
 

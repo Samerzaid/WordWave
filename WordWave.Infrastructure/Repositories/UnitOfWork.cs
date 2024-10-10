@@ -14,7 +14,6 @@ namespace WordWave.Infrastructure.Repositories
 
         public IBlogRepository BlogRepository { get; private set; }
         public ICommentRepository CommentRepository { get; private set; }
-        public ITagRepository TagRepository { get; private set; }
 
         public UnitOfWork(BlogDbContext blogContext)
         {
@@ -22,7 +21,6 @@ namespace WordWave.Infrastructure.Repositories
 
             BlogRepository = new BlogRepository(blogContext);
             CommentRepository = new CommentRepository(blogContext);
-            TagRepository = new TagRepository(blogContext);
         }
 
         public async Task CompleteAsync()

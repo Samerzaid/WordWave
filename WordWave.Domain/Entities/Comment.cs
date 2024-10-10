@@ -13,9 +13,7 @@ namespace WordWave.Domain.Entities
         public string Content { get; set; }
         public DateTime DateCreated { get; set; }
         public string Author { get; set; }
+        public ICollection<BlogPostComment> BlogPostComments { get; set; } = new List<BlogPostComment>();
 
-        // Foreign key
-        public int BlogPostId { get; set; }
-        public BlogPost BlogPost { get; set; }
     }
 }

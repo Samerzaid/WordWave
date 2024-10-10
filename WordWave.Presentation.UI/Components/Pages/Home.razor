@@ -1,7 +1,71 @@
 ﻿@page "/"
+@using WordWave.Presentation.DTOs
+@using WordWave.Presentation.Interfaces
+@inject IBlogService BlogService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<div class="home-page" style="background-color: #83C5BE; min-height: 100vh;">
+    <!-- Hero Section -->
+    <section class="hero-section text-center text-light p-5" style="background-color: #006D77;">
+        <div class="container">
+            <h1 class="display-4">Welcome to WordWave</h1>
+            <p class="lead">Your daily source for insightful articles and inspiring stories.</p>
+            <button class="btn btn-primary btn-lg mt-3" @onclick="NavigateToBlogs">Explore Blogs</button>
+        </div>
+    </section>
 
-<h1>Hello, world!</h1>
+    <!-- Featured Blogs Section -->
+    <section class="featured-blogs py-5" style="background-color: #83C5BE;">
+        <div class="container">
+            <h2 class="text-center mb-5 text-dark">Featured Articles</h2>
+            @if (featuredBlogs == null)
+            {
+                <p class="text-center"><em>Loading featured articles...</em></p>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var blog in featuredBlogs)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm h-100" style="background-color: #AAC3C1; border-radius: 8px;">
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark">@blog.Title</h5>
+                                    <p class="card-text text-muted">
+                                        @((blog.Content.Length > 100) ? blog.Content.Substring(0, 100) + "..." : blog.Content)
+                                    </p>
+                                    <small class="text-muted">By @blog.Author on @blog.DateCreated.ToString("MMMM dd, yyyy")</small>
+                                    <a href="/blogs/@blog.Id" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </section>
 
-Welcome to your new app.
+    <!-- About Section -->
+    <section class="about-section text-center p-5" style="background-color: #006D77; color: white;">
+        <div class="container">
+            <h3>About WordWave</h3>
+            <p class="mt-3">WordWave is a platform where writers and readers connect. Dive into our collection of articles, share your thoughts, and be part of a growing community of thinkers and creators.</p>
+            <a href="/aboutUs" class="btn btn-outline-light mt-3">Learn More</a>
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<BlogPostDto> featuredBlogs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        featuredBlogs = (await BlogService.GetAllAsync()).Take(3).ToList();
+    }
+
+    private void NavigateToBlogs()
+    {
+        NavigationManager.NavigateTo("/blogs");
+    }
+}

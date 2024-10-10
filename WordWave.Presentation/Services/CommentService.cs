@@ -11,69 +11,42 @@ namespace WordWave.Presentation.Services
 {
     public class CommentService : ICommentService
     {
-
         private readonly HttpClient _httpClient;
-        private ICommentService _commentServiceImplementation;
 
         public CommentService(IHttpClientFactory factory)
         {
             _httpClient = factory.CreateClient("WordWaveApi");
         }
+
         public async Task<CommentDto> GetByIdAsync(int id)
         {
-            var response = await _httpClient.GetAsync($"/api/Comment/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-
-            var result = await response.Content.ReadFromJsonAsync<CommentDto>();
-            return result;
+            return await _httpClient.GetFromJsonAsync<CommentDto>($"api/Comment/id/{id}");
         }
 
         public async Task<IEnumerable<CommentDto>> GetAllAsync()
         {
-            var response = await _httpClient.GetAsync("/api/Comment");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return Enumerable.Empty<CommentDto>();
-
-            }
-            var result = await response.Content.ReadFromJsonAsync<IEnumerable<CommentDto>>();
-            return result ?? Enumerable.Empty<CommentDto>();
+            return await _httpClient.GetFromJsonAsync<IEnumerable<CommentDto>>("api/Comment");
         }
 
-        public async Task AddAsync(CommentDto entity)
+        public async Task AddAsync(CommentDto comment)
         {
-
-            throw new NotImplementedException();
+            await _httpClient.PostAsJsonAsync("api/Comment", comment);
         }
 
-        public async Task AddCommentToPostAsync(CommentDto entity, int blogPostId)
+        public async Task UpdateAsync(CommentDto comment, int id)
         {
-            var response = await _httpClient.PostAsJsonAsync($"/api/Comment/blogPostId/{blogPostId}", entity);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return;
-            }
+            await _httpClient.PutAsJsonAsync($"api/Comment/id/{id}", comment);
         }
 
-        public Task UpdateAsync(CommentDto entity, int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            await _httpClient.DeleteAsync($"api/Comment/id/{id}");
         }
 
-        public async Task DeleteAsync(int commentId)
+        public async Task<IEnumerable<BlogPostDto>> GetBlogPostsByCommentIdAsync(int commentId)
         {
-            var response = await _httpClient.DeleteAsync($"/api/Comment/CommentId/{commentId}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return;
-            }
+            return await _httpClient.GetFromJsonAsync<IEnumerable<BlogPostDto>>($"api/Comment/{commentId}/blogposts");
         }
     }
 }
+

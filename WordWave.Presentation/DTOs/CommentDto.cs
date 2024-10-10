@@ -13,9 +13,6 @@ namespace WordWave.Presentation.DTOs
         public string Content { get; set; }
         public DateTime DateCreated { get; set; }
         public string Author { get; set; }
-
-        // Foreign key
-        public int BlogPostId { get; set; }
-        public BlogPostDto BlogPostDtos { get; set; }
     }
 }
+

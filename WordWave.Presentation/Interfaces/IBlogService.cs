@@ -9,6 +9,9 @@ namespace WordWave.Presentation.Interfaces
 {
     public interface IBlogService : IService<BlogPostDto, int>
     {
-        Task<BlogPostDto> GetBlogByTitleAsync(string title);
+        Task AddCommentToBlogPostAsync(int blogPostId, CommentDto comment);
+        Task<IEnumerable<CommentDto>> GetCommentsByBlogPostIdAsync(int blogPostId);
+
     }
 }
+

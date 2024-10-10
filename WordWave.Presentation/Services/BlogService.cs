@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using WordWave.Presentation.DTOs;
 using WordWave.Presentation.Interfaces;
@@ -12,6 +11,7 @@ namespace WordWave.Presentation.Services
     public class BlogService : IBlogService
     {
         private readonly HttpClient _httpClient;
+
         public BlogService(IHttpClientFactory factory)
         {
             _httpClient = factory.CreateClient("WordWaveApi");
@@ -19,71 +19,39 @@ namespace WordWave.Presentation.Services
 
         public async Task<BlogPostDto> GetByIdAsync(int id)
         {
-            var response = await _httpClient.GetAsync($"/api/Blog/id/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-
-            var result = await response.Content.ReadFromJsonAsync<BlogPostDto>();
-            return result ?? null;
+            return await _httpClient.GetFromJsonAsync<BlogPostDto>($"api/Blog/id/{id}");
         }
 
         public async Task<IEnumerable<BlogPostDto>> GetAllAsync()
         {
-            var response = await _httpClient.GetAsync("/api/Blog/");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return Enumerable.Empty<BlogPostDto>();
-
-            }
-            var result = await response.Content.ReadFromJsonAsync<IEnumerable<BlogPostDto>>();
-            return result ?? Enumerable.Empty<BlogPostDto>();
+            return await _httpClient.GetFromJsonAsync<IEnumerable<BlogPostDto>>("api/Blog");
         }
 
-        public async Task AddAsync(BlogPostDto entity)
+        public async Task AddAsync(BlogPostDto blogPost)
         {
-            var response = await _httpClient.PostAsJsonAsync("/api/Blog/", entity);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return;
-            }
+            await _httpClient.PostAsJsonAsync("api/Blog", blogPost);
         }
 
-        public async Task UpdateAsync(BlogPostDto entity, int id)
+        public async Task UpdateAsync(BlogPostDto blogPost, int id)
         {
-            var response = await _httpClient.PutAsJsonAsync($"/api/Blog/id/{id}", entity);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return;
-            }
+            await _httpClient.PutAsJsonAsync($"api/Blog/id/{id}", blogPost);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"/api/Blog/id/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return;
-            }
+            await _httpClient.DeleteAsync($"api/Blog/id/{id}");
         }
 
-        public async Task<BlogPostDto> GetBlogByTitleAsync(string title)
+        // New method for adding a comment to a blog post
+        public async Task AddCommentToBlogPostAsync(int blogPostId, CommentDto comment)
         {
-            var response = await _httpClient.GetAsync($"/api/Blog/title/{title}");
+            await _httpClient.PostAsJsonAsync($"api/Blog/{blogPostId}/comments", comment);
+        }
 
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-
-            var result = await response.Content.ReadFromJsonAsync<BlogPostDto>();
-            return result ?? null;
+        // New method for retrieving comments by blog post ID
+        public async Task<IEnumerable<CommentDto>> GetCommentsByBlogPostIdAsync(int blogPostId)
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<CommentDto>>($"api/Blog/{blogPostId}/comments");
         }
     }
 }

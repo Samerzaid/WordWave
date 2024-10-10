@@ -1,130 +1,57 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using WordWave.Presentation.Data
-
-
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject SignInManager<ApplicationUser> SignInManager
 
-@rendermode InteractiveServer
+<!-- Compact Navbar with smaller padding and font sizes -->
+<nav class="navbar navbar-expand-lg" style="background-color: #1F383A; padding: 0.5rem;">
+    <div class="container-fluid d-flex align-items-center">
+        <!-- Logo and Brand Name -->
+        <a class="navbar-brand d-flex align-items-center me-4" href="/" style="padding: 0;">
+            <img src="data:image/jpeg;base64,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" style="height:40px; width:auto;" alt="Logo" />
+            <span class="ms-2 text-white fs-5">WordWave</span> <!-- Adjust font size of brand text -->
+        </a>
 
-<nav id="nav" class="navbar navbar-expand-lg bg-black">
-    <div class="container-fluid col-9">
-        <a class="navbar-brand" href="#"><img id="nav-icon" src="/images/Panda_utan_text.png" style="height:140px; width:auto;" /></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon" style="color: red;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                </svg>
-            </span>
+        <!-- Navbar Toggler for Mobile -->
+        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarColor01">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link active text-danger fs-2" href="/">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
-                        </svg>
-                        <h4 class="navbar-header">Home</h4>
-                        <span class="visually-hidden">(current)</span>
-                    </a>
-                </li>
-                <hr />
-                <hr />
-                <hr />
 
+        <!-- Navbar Links -->
+        <div class="collapse navbar-collapse ms-3" id="navbarContent">
+            <ul class="navbar-nav d-flex align-items-center" style="gap: 1rem;">
                 <li class="nav-item">
-                    <a class="nav-link text-danger fs-2" href="/blogs">
-                        <span class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16">
-                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
-                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
-                            </svg>
-                        </span>
-                        <span class="text">
-                            <h4 class="navbar-header">Blogs</h4>
-                        </span>
-                    </a>
+                    <a class="nav-link text-white fs-6 p-1" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fs-6 p-1" href="/blogs">Blogs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fs-6 p-1" href="/AboutUs">About Us</a>
                 </li>
 
-                <hr />
-                <hr />
-                <hr />
-                <li class="nav-item">
-                    <a class="nav-link text-danger fs-2" href="/AboutUs">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cassette" viewBox="0 0 16 16">
-                            <path d="M4 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2m9-1a1 1 0 1 1-2 0 1 1 0 0 1 2 0M7 6a1 1 0 0 0 0 2h2a1 1 0 1 0 0-2z" />
-                            <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zM1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-.691l-1.362-2.724A.5.5 0 0 0 12 10H4a.5.5 0 0 0-.447.276L2.19 13H1.5a.5.5 0 0 1-.5-.5zM11.691 11l1 2H3.309l1-2z" />
-                        </svg>
-                        <h4 class="navbar-header">About Us</h4>
-                    </a>
-                    <hr />
-                    <hr />
-                    <hr />
-                </li>
                 @if (!_authenticationState.User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item">
-                        <a class="nav-link text-danger fs-2" href="/Account/Login">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">
-                                <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
-                                <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
-                            </svg>
-                            <h4 class="navbar-header">Login</h4>
-                        </a>
+                        <a class="nav-link text-white fs-6 p-1" href="/Account/Login">Login</a>
                     </li>
-                    <hr />
-                    <hr />
-                    <hr />
                 }
-                @if (_authenticationState.User.Identity.IsAuthenticated)
+                else
                 {
                     <li class="nav-item">
-                        <a class="nav-link text-danger fs-2" href="/AdminFrontPage">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
-                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
-                            </svg>
-                            <h4 class="navbar-header">Settings</h4>
-                        </a>
+                        <a class="nav-link text-white fs-6 p-1" href="/AdminFrontPage">Settings</a>
                     </li>
-                    <hr />
-                    <hr />
-                    <hr />
-
                     <li class="nav-item">
-                        <a class="fs-2">
-                            <form action="Account/Logout" method="post">
-                                <AntiforgeryToken />
-                                <input type="hidden" value="LoggedOut" name="ReturnUrl" />
-                                <button type="submit" class="nav-link text-danger bg-black border-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-closed" viewBox="0 0 16 16">
-                                        <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z" />
-                                        <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
-                                    </svg>
-                                    <h4 class="navbar-header">Logout</h4>
-                                </button>
-                            </form>
-                        </a>
+                        <form action="/Account/Logout" method="post" class="d-inline">
+                            <button type="submit" class="nav-link btn btn-link text-white fs-6 p-1">Logout</button>
+                        </form>
                     </li>
-                    <hr />
-                    <hr />
-                    <hr />
                 }
-                <li class="nav-item">
-                    <a href="#sidebar" class="nav-link text-decoration-none d-block text-danger fs-2" data-bs-toggle="offcanvas" role="button" aria-controls="sidebar">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
-                        </svg>
-                        <h4 class="navbar-header">Cart</h4>
-                    </a>
-                </li>
             </ul>
-            <img id="nav-icon" src="/images/Finish_IT_Text.png" style="height: 140px; width: auto;" />
         </div>
     </div>
 </nav>
-
 
 @code {
     private string? currentUrl;
@@ -149,5 +76,4 @@
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
-
 }

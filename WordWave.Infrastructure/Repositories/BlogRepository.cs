@@ -19,101 +19,82 @@ namespace WordWave.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<BlogPost> GetByIdAsync(int id)
+        public async Task AddAsync(BlogPost entity)
         {
-            return await _context.BlogPosts
-                .Include(b => b.Comments)
-                .Include(b => b.BlogPostTags)
-                    .ThenInclude(bpt => bpt.Tag)
-                .FirstOrDefaultAsync(b => b.Id == id);
+            _context.BlogPosts.Add(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<BlogPost> GetBlogByTitleAsync(string title)
+        public async Task DeleteAsync(int id)
         {
-            var blogTitle = await _context.BlogPosts
-                .Include(b => b.Comments)
-                .Include(b => b.BlogPostTags)
-                    .ThenInclude(bpt => bpt.Tag)
-                .FirstOrDefaultAsync(x => x.Title.ToLower().Equals(title.ToLower()));
-
-            if (blogTitle is null)
+            var blogPost = await _context.BlogPosts.FindAsync(id);
+            if (blogPost != null)
             {
-                return null;
+                _context.BlogPosts.Remove(blogPost);
+                await _context.SaveChangesAsync();
             }
-
-            return blogTitle;
         }
 
         public async Task<IEnumerable<BlogPost>> GetAllAsync()
         {
             return await _context.BlogPosts
-                .Include(b => b.Comments)
-                .Include(b => b.BlogPostTags)
-                    .ThenInclude(bpt => bpt.Tag)
+                .Include(bp => bp.BlogPostComments)
+                    .ThenInclude(bc => bc.Comment)
                 .ToListAsync();
         }
 
-        public async Task AddAsync(BlogPost entity)
+        public async Task<BlogPost> GetByIdAsync(int id)
         {
-            if (entity.Comments != null)
-            {
-                foreach (var comment in entity.Comments)
-                {
-                    _context.Entry(comment).State = EntityState.Added;
-                }
-            }
-
-            if (entity.BlogPostTags != null)
-            {
-                foreach (var blogPostTag in entity.BlogPostTags)
-                {
-                    _context.Entry(blogPostTag).State = EntityState.Added;
-                }
-            }
-
-            await _context.BlogPosts.AddAsync(entity);
+            return await _context.BlogPosts
+                .Include(bp => bp.BlogPostComments)
+                    .ThenInclude(bc => bc.Comment)
+                .FirstOrDefaultAsync(bp => bp.Id == id);
         }
 
         public async Task UpdateAsync(BlogPost entity)
         {
-            var updateBlog = await _context.BlogPosts
-                .Include(b => b.Comments)
-                .Include(b => b.BlogPostTags)
-                .FirstOrDefaultAsync(b => b.Id == entity.Id);
-
-            if (updateBlog is null)
-            {
-                return;
-            }
-
-            updateBlog.Title = entity.Title;
-            updateBlog.Content = entity.Content;
-            updateBlog.DateCreated = entity.DateCreated;
-            updateBlog.Author = entity.Author;
-
-            if (entity.Comments != null)
-            {
-                foreach (var comment in entity.Comments)
-                {
-                    _context.Entry(comment).State = comment.Id == 0 ? EntityState.Added : EntityState.Modified;
-                }
-            }
-
-            if (entity.BlogPostTags != null)
-            {
-                foreach (var blogPostTag in entity.BlogPostTags)
-                {
-                    _context.Entry(blogPostTag).State = blogPostTag.Id == 0 ? EntityState.Added : EntityState.Modified;
-                }
-            }
-
-            _context.BlogPosts.Update(updateBlog);
+            _context.BlogPosts.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task AddCommentToBlogPostAsync(int blogPostId, Comment comment)
         {
-            var blogToDelete = await GetByIdAsync(id);
-            _context.BlogPosts.Remove(blogToDelete);
+            var blogPost = await _context.BlogPosts.FindAsync(blogPostId);
+            if (blogPost == null) throw new KeyNotFoundException("Blog post not found.");
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            _context.BlogPostComments.Add(new BlogPostComment
+            {
+                BlogPostId = blogPostId,
+                CommentId = comment.Id
+            });
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Comment>> GetCommentsByBlogPostIdAsync(int blogPostId)
+        {
+            return await _context.BlogPostComments
+                .Where(bc => bc.BlogPostId == blogPostId)
+                .Select(bc => bc.Comment)
+                .ToListAsync();
+        }
+
+        public async Task<BlogPost> GetBlogByTitleAsync(string title)
+        {
+            return await _context.BlogPosts
+                .Include(bp => bp.BlogPostComments) // Include related comments if needed
+                    .ThenInclude(bc => bc.Comment)
+                .FirstOrDefaultAsync(bp => bp.Title == title);
+        }
+
+        public async Task<BlogPost> GetBlogByTagAsync(string tag)
+        {
+            return await _context.BlogPosts
+                .Include(bp => bp.BlogPostComments) // Include related comments if needed
+                    .ThenInclude(bc => bc.Comment)
+                .FirstOrDefaultAsync(bp => bp.Tag == tag);
         }
     }
 }

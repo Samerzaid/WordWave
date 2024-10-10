@@ -15,8 +15,11 @@ namespace WordWave.Domain.Entities
         public string Content { get; set; }
         public DateTime DateCreated { get; set; }
         public string Author { get; set; }
+        public string Tag { get; set; }
+
         public ICollection<Comment> Comments { get; set; }
-        public ICollection<Tag> Tags { get; set; }
-        public ICollection<BlogPostTag> BlogPostTags { get; set; }
+      
+        public ICollection<BlogPostComment> BlogPostComments { get; set; } = new List<BlogPostComment>();
+
     }
 }

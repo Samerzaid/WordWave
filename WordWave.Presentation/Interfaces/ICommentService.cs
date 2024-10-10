@@ -9,6 +9,6 @@ namespace WordWave.Presentation.Interfaces
 {
     public interface ICommentService : IService<CommentDto, int>
     {
-        Task AddCommentToPostAsync(CommentDto entity, int blogPostId);
     }
 }
+

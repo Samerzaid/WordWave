@@ -1,22 +1,76 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page bg-black @* bg-gradient *@">
-    <main>
-        <div>
-            <NavMenu />
-        </div>
+<NavMenu />
+<main class="container-fluid">
+    @Body
+</main>
 
-        <article class="content">
-            @Body
-        </article>
-        <div>
-            <Footer />
-        </div>
-    </main>
-</div>
+<head
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+    <!-- index.html (for Blazor WebAssembly) or _Host.cshtml (for Blazor Server) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .footer {
+        background: linear-gradient(180deg, rgba(41, 74, 60, 0.8) 0%, rgba(41, 74, 60, 0) 100%);
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+        bottom: 0;
+        width: 100%;
+        background-color: #1F383A;
+    }
+
+    .container-footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .column1 {
+        flex: 0 1 30%; /* Adjust the width as needed */
+        margin-bottom: 20px;
+    }
+
+    .bottom-column {
+        flex: 1 1 100%;
+    }
+</style>
+
+
+<footer class="footer mt-auto py-3 ">
+    <div class="container-footer">
+        <div class="column1">
+            <h5>Kontakta oss</h5>
+            <p>E-post: Blog@hotmail.com</p>
+            <p>Tel: 031-746 50 00</p>
+        </div>
+        <div class="column1">
+                <h5>Följ oss</h5>
+                <a href="https://www.facebook.com/">
+                    <i class="bi bi-facebook"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
+                    </svg>
+                </a>
+        </div>
+        <div class="column1">
+            <h5>Blog AB</h5>
+            <p>Adress:</p>
+            <p>Frölunda Torg 13</p>
+            <p>421 42 Västra Frölunda</p>
+        </div>
+        
+    </div>
+
+</footer>
+

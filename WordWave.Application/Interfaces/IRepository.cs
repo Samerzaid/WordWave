@@ -16,3 +16,4 @@ namespace WordWave.Application.Interfaces
         Task DeleteAsync(TId id);
     }
 }
+

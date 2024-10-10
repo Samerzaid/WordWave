@@ -86,5 +86,10 @@ namespace WordWave.Presentation.Services
             var result = await response.Content.ReadFromJsonAsync<UserDto>();
             return result ?? null;
         }
+
+        public Task UpdateAsync(UserDto entity, string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

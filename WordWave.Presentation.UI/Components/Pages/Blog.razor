@@ -1,0 +1,183 @@
+﻿@page "/blogs"
+@using WordWave.Presentation.DTOs
+@using WordWave.Presentation.Interfaces
+@inject IBlogService BlogService
+@inject ICommentService CommentService
+@rendermode InteractiveServer
+
+<div class="blog-page" style="background-color: #83C5BE; min-height: 100vh; padding-top: 60px;">
+    <div class="container py-4">
+        <h3 class="text-center mb-4 text-dark">All Blog Posts</h3>
+
+        <!-- Add Blog Button -->
+        <div class="text-center mb-4">
+            <button class="btn btn-dark" style="border-radius: 25px; padding: 10px 20px;" @onclick="ToggleAddBlogModal">Add Blog</button>
+        </div>
+
+        <!-- Add Blog Modal -->
+        @if (showAddBlogModal)
+        {
+            <div class="modal-overlay">
+                <div class="modal-dialog">
+                    <div class="modal-content rounded">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title text-dark">Add New Blog</h5>
+                            <button type="button" class="btn-close" aria-label="Close" @onclick="ToggleAddBlogModal"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <EditForm Model="@newBlogPost" OnValidSubmit="AddBlog">
+                                <div class="mb-4">
+                                    <InputText @bind-Value="newBlogPost.Title" class="form-control form-control-lg rounded-pill" placeholder="Blog Title" required />
+                                </div>
+                                <div class="mb-4">
+                                    <InputTextArea @bind-Value="newBlogPost.Content" class="form-control form-control-lg rounded" placeholder="Blog Content" required rows="4" />
+                                </div>
+                                <div class="mb-4">
+                                    <InputText @bind-Value="newBlogPost.Author" class="form-control form-control-lg rounded-pill" placeholder="Author" required />
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 rounded-pill">Submit Blog</button>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Blog Post List -->
+        @if (blogs == null)
+        {
+            <p class="text-center"><em>Loading...</em></p>
+        }
+        else
+        {
+            @foreach (var blog in blogs)
+            {
+                <div class="blog-card mb-4" style="background-color: #AAC3C1;">
+                    <div class="blog-card-header">
+                        <h4>@blog.Title</h4>
+                        <small>By @blog.Author on @blog.DateCreated.ToString("MMMM dd, yyyy")</small>
+                    </div>
+                    <div class="blog-card-content">
+                        <p>@((blog.Content.Length > 150) ? blog.Content.Substring(0, 150) + "..." : blog.Content)</p>
+                    </div>
+
+                    <!-- Display Comments -->
+                    <div class="blog-comments mt-3">
+                        <h5>Comments:</h5>
+                        @if (blog.Comments != null && blog.Comments.Any())
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var comment in blog.Comments)
+                                {
+                                    <li class="list-group-item" style="background-color: #f0f0f0;">
+                                        <p><strong>@comment.Author</strong>: @comment.Content</p>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No comments yet.</p>
+                        }
+                    </div>
+
+                    <!-- Add Comment Section -->
+                    <div class="blog-card-footer mt-2">
+                        <button class="btn btn-outline-dark" @onclick="() => ToggleCommentForm(blog.Id)">Add Comment</button>
+                    </div>
+
+                    @if (showCommentFormId == blog.Id)
+                    {
+                        <div class="comment-form mt-3">
+                            <EditForm Model="@newComment" OnValidSubmit="() => AddComment(blog.Id)">
+                                <div class="mb-3">
+                                    <InputText @bind-Value="newComment.Author" class="form-control" placeholder="Your Name" required />
+                                </div>
+                                <div class="mb-3">
+                                    <InputTextArea @bind-Value="newComment.Content" class="form-control" placeholder="Your Comment" required />
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Submit Comment</button>
+                            </EditForm>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private List<BlogPostDto> blogs;
+    private BlogPostDto newBlogPost = new BlogPostDto();
+    private CommentDto newComment = new CommentDto();
+    private int? showCommentFormId;
+    private bool showAddBlogModal = false;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBlogs();
+    }
+
+    private void ToggleCommentForm(int blogId)
+    {
+        showCommentFormId = showCommentFormId == blogId ? null : blogId;
+        newComment = new CommentDto(); // Reset the comment form
+    }
+
+    private void ToggleAddBlogModal()
+    {
+        showAddBlogModal = !showAddBlogModal;
+        newBlogPost = new BlogPostDto(); // Reset the blog form
+    }
+
+    private async Task AddBlog()
+    {
+        try
+        {
+            newBlogPost.DateCreated = DateTime.Now;
+            await BlogService.AddAsync(newBlogPost);
+            await LoadBlogs(); // Refresh to show the new blog post
+            showAddBlogModal = false;
+            errorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error adding blog: {ex.Message}";
+        }
+    }
+
+    private async Task AddComment(int blogId)
+    {
+        try
+        {
+            newComment.DateCreated = DateTime.Now;
+            await BlogService.AddCommentToBlogPostAsync(blogId, newComment);
+            await LoadBlogs(); // Refresh to show the new comment
+            showCommentFormId = null; // Hide the comment form
+            errorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error adding comment: {ex.Message}";
+        }
+    }
+
+    private async Task LoadBlogs()
+    {
+        try
+        {
+            blogs = (await BlogService.GetAllAsync()).ToList();
+
+            // Load comments for each blog
+            foreach (var blog in blogs)
+            {
+                blog.Comments = (await BlogService.GetCommentsByBlogPostIdAsync(blog.Id)).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading blogs: {ex.Message}";
+        }
+    }
+}

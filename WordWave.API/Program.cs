@@ -14,12 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("BlogDatabass");
 
 builder.Services.AddDbContext<BlogDbContext>(
-    options => options.UseSqlServer("Data Source=LAPTOP-PIO0F9QS; Initial Catalog = BlogDatabass; Integrated Security = True; Connect Timeout = 30; Encrypt = True; Trust Server Certificate=True; Application Intent = ReadWrite; Multi Subnet Failover=False")
+    options => options.UseSqlServer("Data Source=LAPTOP-8SM8C2KU; Initial Catalog = BlogDatabass; Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False")
 );
 
 
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add services for controllers with NewtonsoftJson
@@ -43,7 +44,6 @@ app.UseRouting();
 
 app.BlogEndPoints();
 app.CommentEndPoints();
-app.TagEndPoints();
 
 app.UseEndpoints(endpoints =>
 {

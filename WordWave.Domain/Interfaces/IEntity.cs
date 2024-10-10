@@ -11,3 +11,4 @@ namespace WordWave.Domain.Interfaces
         T Id { get; set; }
     }
 }
+

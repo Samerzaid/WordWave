@@ -12,7 +12,9 @@ namespace WordWave.Presentation.Interfaces
         Task<TEntity> GetByIdAsync(TId id);
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task AddAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity, int id);
+        Task UpdateAsync(TEntity entity, TId id);
         Task DeleteAsync(TId id);
     }
 }
+
+

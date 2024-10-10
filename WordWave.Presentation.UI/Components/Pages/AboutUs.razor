@@ -1,0 +1,103 @@
+﻿@page "/AboutUs"
+@inject NavigationManager NavigationManager
+
+<div class="about-us-page">
+    <!-- Hero Section -->
+    <section class="about-hero-section text-center text-light d-flex align-items-center justify-content-center">
+        <div class="container">
+            <h1 class="display-4">About WordWave</h1>
+            <p class="lead">Empowering voices, connecting readers, and fostering a community of thinkers and creators.</p>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section class="mission-vision-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <h2>Our Mission</h2>
+                    <p>To provide a platform where stories come alive, ideas are shared, and communities grow. We believe in the power of words to inspire, educate, and connect people globally.</p>
+                </div>
+                <div class="col-md-6 text-center">
+                    <h2>Our Vision</h2>
+                    <p>We envision a world where knowledge flows freely, creativity flourishes, and readers and writers unite to shape meaningful dialogues across borders and generations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+
+    <section class="team-section py-5 bg-light">
+        <h2 class="text-center mb-5">Meet Our Team</h2>
+
+        <div class="container">
+            <div class="row">
+                @foreach (var member in teamMembers)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm h-100 text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">@member.Name</h5>
+                                <p class="card-text text-muted">@member.Position</p>
+                                <p class="card-text">@member.Bio</p>
+                                <a href="@member.LinkedInUrl" class="btn btn-outline-primary" target="_blank">
+                                    <i class="bi bi-linkedin"></i> Connect
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section class="contact-us-section text-center py-5">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p class="lead">Have questions? Want to connect? Reach out, and let’s start a conversation!</p>
+            <button class="btn btn-primary" @onclick="NavigateToContact">Get in Touch</button>
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<TeamMember> teamMembers = new List<TeamMember>
+    {
+        new TeamMember
+        {
+            Name = "Samer Zaid",
+            Position = "Founder & CEO",
+            Bio = "Alex is a visionary leader with over 20 years in the publishing industry.",
+            LinkedInUrl = "https://www.linkedin.com/in/samer-zaid-32370a289/"
+        },
+        new TeamMember
+        {
+            Name = "Saher Zaid",
+            Position = "Chief Editor",
+            Bio = "Maria brings a keen eye for detail and a passion for storytelling.",
+            LinkedInUrl = "https://www.linkedin.com/in/saher-zaid-4584842a7/"
+        },
+        new TeamMember
+        {
+            Name = "Sari Zaid",
+            Position = "Community Manager",
+            Bio = "David connects with our audience and fosters a thriving community.",
+            LinkedInUrl = "https://linkedin.com/in/david-lee"
+        }
+    };
+
+    private void NavigateToContact()
+    {
+        NavigationManager.NavigateTo("/contact");
+    }
+
+    public class TeamMember
+    {
+        public string Name { get; set; }
+        public string Position { get; set; }
+        public string Bio { get; set; }
+        public string LinkedInUrl { get; set; }
+    }
+}

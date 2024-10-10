@@ -14,109 +14,81 @@ namespace WordWave.API.Extensions
             group.MapGet("/", GetAllBlogs);
             group.MapGet("/id/{id}", GetBlogById);
             group.MapGet("/title/{title}", GetBlogByTitle);
+            group.MapGet("/tag/{tag}", GetBlogByTag);
             group.MapPut("/id/{id}", UpdateBlog);
             group.MapDelete("/id/{id}", DeleteBlog);
+            group.MapPost("/{blogPostId}/comments", AddCommentToBlogPost);
+            group.MapGet("/{blogPostId}/comments", GetCommentsByBlogPostId);
 
             return app;
         }
 
-        private static async Task<IResult> DeleteBlog(IUnitOfWork unit, int id)
+        private static async Task<IResult> AddBlog([FromServices] IBlogRepository repository, [FromBody] BlogPost blog)
         {
-            var blogs = await unit.BlogRepository.GetByIdAsync(id);
-
-            if (blogs is null)
-            {
-                Results.NotFound("Post not found");
-            }
-
-            await unit.BlogRepository.DeleteAsync(id);
-            await unit.CompleteAsync();
-
-            return Results.Ok();
+            await repository.AddAsync(blog);
+            return Results.Created($"/api/Blog/{blog.Id}", blog);
         }
 
-        private static async Task<IResult> UpdateBlog(IUnitOfWork unit, BlogPost entity, int id)
+        private static async Task<IResult> GetAllBlogs([FromServices] IBlogRepository repository)
         {
-            var blogs = await unit.BlogRepository.GetByIdAsync(id);
-            if (blogs is null)
-            {
-                Results.NotFound("Event not found");
-            }
-
-            await unit.BlogRepository.UpdateAsync(entity);
-
-            await unit.CompleteAsync();
-            return Results.Ok();
+            var blogs = await repository.GetAllAsync();
+            return Results.Ok(blogs);
         }
 
-        private static async Task<BlogPost> GetBlogByTitle(IUnitOfWork unit, string title)
+        private static async Task<IResult> GetBlogById([FromServices] IBlogRepository repository, [FromRoute] int id)
         {
-            var blogs = await unit.BlogRepository.GetBlogByTitleAsync(title);
-            if (blogs is null)
-            {
-                Results.NotFound("Post not found");
-                return null;
-            }
-
-            Results.Ok(blogs);
-            return blogs;
+            var blog = await repository.GetByIdAsync(id);
+            return blog is not null ? Results.Ok(blog) : Results.NotFound();
         }
 
-        private static async Task<BlogPost> GetBlogById(IUnitOfWork unit, int id)
+        private static async Task<IResult> GetBlogByTitle([FromServices] IBlogRepository repository, [FromRoute] string title)
         {
-            var blogs = await unit.BlogRepository.GetByIdAsync(id);
-
-            if (blogs is null)
-            {
-                Results.NotFound("Post not found");
-                return null;
-            }
-
-            Results.Ok(blogs);
-            return blogs;
+            var blog = await repository.GetBlogByTitleAsync(title);
+            return blog is not null ? Results.Ok(blog) : Results.NotFound();
         }
 
-        private static async Task<IEnumerable<BlogPost>> GetAllBlogs(IUnitOfWork unit)
+        private static async Task<IResult> GetBlogByTag([FromServices] IBlogRepository repository, [FromRoute] string tag)
         {
-            var blogs = await unit.BlogRepository.GetAllAsync();
-
-            var allBlogs = blogs.ToList();
-
-            if (allBlogs.Count() == 0)
-            {
-                Results.NotFound("No posts found");
-                return null;
-            }
-
-            Results.Ok(allBlogs);
-            return allBlogs;
+            var blog = await repository.GetBlogByTagAsync(tag);
+            return blog is not null ? Results.Ok(blog) : Results.NotFound();
         }
 
-        private static async Task<IResult> AddBlog(IUnitOfWork unit, [FromBody] BlogPost entity)
+        private static async Task<IResult> UpdateBlog([FromServices] IBlogRepository repository, [FromRoute] int id, [FromBody] BlogPost blog)
         {
-            //await unit.BlogRepository.AddAsync(entity);
+            var existingBlog = await repository.GetByIdAsync(id);
+            if (existingBlog is null) return Results.NotFound();
 
-            //await unit.CompleteAsync();
+            existingBlog.Title = blog.Title;
+            existingBlog.Content = blog.Content;
+            existingBlog.Author = blog.Author;
 
-            //return Results.Ok();
+            await repository.UpdateAsync(existingBlog);
+            return Results.NoContent();
+        }
 
-            if (entity.Tags != null && entity.Tags.Any())
-            {
-                foreach (var tag in entity.Tags)
-                {
-                    var existingTag = await unit.TagRepository.GetByNameAsync(tag.Name);
-                    if (existingTag != null)
-                    {
-                        // Use the existing tag
-                        tag.Id = existingTag.Id;
-                    }
-                }
-            }
+        private static async Task<IResult> DeleteBlog([FromServices] IBlogRepository repository, [FromRoute] int id)
+        {
+            await repository.DeleteAsync(id);
+            return Results.NoContent();
+        }
 
-            await unit.BlogRepository.AddAsync(entity);
-            await unit.CompleteAsync();
+        private static async Task<IResult> AddCommentToBlogPost(
+            [FromServices] IBlogRepository blogRepository,
+            [FromServices] ICommentRepository commentRepository,
+            [FromRoute] int blogPostId,
+            [FromBody] Comment comment)
+        {
+            await blogRepository.AddCommentToBlogPostAsync(blogPostId, comment);
+            return Results.Created($"/api/Blog/{blogPostId}/comments/{comment.Id}", comment);
+        }
 
-            return Results.Ok(entity);
+        private static async Task<IResult> GetCommentsByBlogPostId(
+            [FromServices] IBlogRepository repository,
+            [FromRoute] int blogPostId)
+        {
+            var comments = await repository.GetCommentsByBlogPostIdAsync(blogPostId);
+            return Results.Ok(comments);
         }
     }
 }
+

@@ -14,8 +14,7 @@ namespace WordWave.Presentation.DTOs
         public string Content { get; set; }
         public DateTime DateCreated { get; set; }
         public string Author { get; set; }
-        public ICollection<CommentDto> CommentDtos { get; set; }
-        public ICollection<TagDto> TagsDtos { get; set; }
-        public ICollection<BlogPostDto> BlogPostTagDtos { get; set; }
+        public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
     }
 }
+

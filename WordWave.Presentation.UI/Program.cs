@@ -17,13 +17,12 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpClient("WordWaveApi", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5213");
+    client.BaseAddress = new Uri("http://localhost:5072");
 });
 
 builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<IBlogService, BlogService>();
-builder.Services.AddSingleton<ICommentService, CommentService>();
-builder.Services.AddSingleton<ITagService, TagService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddSingleton<IBlogPostTempUserService, BlogPostTempUserService>();
 
 builder.Services.AddCascadingAuthenticationState();
